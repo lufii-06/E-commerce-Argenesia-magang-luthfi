@@ -12,6 +12,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Session;
 
 class PemesananController extends Controller
 {
@@ -83,9 +84,16 @@ class PemesananController extends Controller
     //     return view('pesanan.penjualan', compact('pesanan', 'detailpemesanan','toko'));
     // }
 
-    public function antar($id)
+    public function antar(Request $request, $id)
     {
-        Pemesanan::where('id', $id)->update(['status' => '2']);
+        $request->validate([
+            'resipengiriman' => 'required|size:16'
+        ], [
+            'resipengiriman.required' => 'Nomor resi pengiriman wajib diisi.',
+            'resipengiriman.size' => 'Nomor resi pengiriman harus memiliki panjang tepat 16 karakter.'
+        ]);
+
+        Pemesanan::where('id', $id)->update(['status' => '2', 'resipengiriman' => $request->resipengiriman]);
         return redirect()->route('penjualan.show');
     }
 
@@ -124,7 +132,7 @@ class PemesananController extends Controller
     public function cetakresipengiriman($id)
     {
         // Mendapatkan data dinamis dari database
-        $pesanan = Pemesanan::with('toko','user')->where("id", $id)->get();
+        $pesanan = Pemesanan::with('toko', 'user')->where("id", $id)->get();
         $detailpemesanan = [];
 
         // Pastikan pesanan ditemukan

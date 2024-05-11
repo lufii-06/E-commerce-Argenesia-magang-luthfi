@@ -12,24 +12,16 @@
 
 <body>
     <div class="container">
-        <div class="text-center my-4"> <!-- resi-header -->
+        <div class="text-center my-4">
             <h3>Resi Pengiriman</h3>
-            <hr class="my-2" style="border-top: 4px solid black;"> <!-- hr-thick -->
+            <hr class="my-2" style="border-top: 4px solid black;">
         </div>
-
         @foreach ($pesanan as $item)
-            <div class="my-4"> <!-- resi-details -->
-                <div class="p-4 border rounded bg-light"> <!-- resi-box -->
-                    <h5 class="text-center"> <!-- Kelas text-center pada h5 -->
-                        No. Resi Pengiriman: {{ sprintf('%07d', $item->id) }}
-                        <br><br>
-                        <div style="display: inline-block;">
-                            <!-- Gunakan inline-block untuk memastikan tetap di tengah -->
-                            {!! DNS1D::getBarcodeHTML(sprintf('%07d', $item->id), 'C39') !!}
-                        </div>
-                    </h5>
-                </div>
+            <div class="my-4">
                 <table class="mt-2" style="width: 34rem;">
+                    <tr>
+                        <td colspan="2" class="text-right pb-3">No. Resi : {{ $item->resipengiriman }}</td>
+                    </tr>
                     <tr>
                         <td>Penerima : {{ $item->name }}</td>
                         <td>Pengirim : {{ $item->user->name }}</td>
@@ -48,7 +40,7 @@
                 </div>
                 <p>
                     Berat : xx gr <br>
-                    Batar Kirim : {{ $item->created_at->addDays(7)->format('d F Y') }}
+                    Batas Kirim : {{ $item->created_at->addDays(7)->format('d F Y') }}
                 </p>
                 <table class="w-100">
                     <tr style="border-top: 2px solid black;">

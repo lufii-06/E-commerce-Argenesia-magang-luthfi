@@ -19,7 +19,8 @@ class Pemesanan extends Model
         'total',
         'status',
         'jenispembayaran',
-        'buktipembayaran'
+        'buktipembayaran',
+        'resipengiriman'
     ];
 
     public function user(){

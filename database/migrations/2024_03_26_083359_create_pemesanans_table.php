@@ -25,6 +25,7 @@ return new class extends Migration
             $table->boolean('status');
             $table->text('jenispembayaran');
             $table->text('buktipembayaran')->nullable();
+            $table->text('resipengiriman')->nullable();
             $table->timestamps();
         });
     }

@@ -122,7 +122,7 @@
                     </div>
 
                     @foreach ($pesanan as $item)
-                        <form action="{{ route('pesanan.antar', $item->id) }}" method="POST">
+                        <form action="{{ route('pesanan.antar', $item->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <!-- Modal -->
@@ -179,8 +179,6 @@
                                                     @endforeach
                                                     <div class="col-md-9">
                                                         {{ $item->toko->name }}
-                                                        <br>
-                                                        <div class="border-top border-dark w-25 mt-5"></div>
                                                     </div>
                                                     <div class="col-md-3 ">
                                                         <div class="font-weight-bold">
@@ -188,22 +186,29 @@
                                                             {{ 'Rp.' . number_format($item->total, 0, ',', '.') }}</div>
                                                     </div>
                                                 </div>
+                                                <br>
+                                                <label for="resipengiriman">No. Resi</label>
+                                                <input type="text" name="resipengiriman" id="resipengiriman"
+                                                    class="form-control w-25" maxlength="16">
+                                                    @error('resipengiriman')
+                                                    <small class="form-text text-danger">{{ $message }}</small>
+                                                @enderror
                                             </div>
                                         </div>
 
                                         <div class="modal-footer d-flex justify-content-between">
-                                            <div class="">
-                                                @if ($item->jenispembayaran === 'bank')
-                                                    <button class="btn-pesan py-1" type="button" data-toggle="modal"
-                                                        data-target="#imageModal{{ $item->id }}">
-                                                        Bukti Pembayaran
-                                                    </button>
-                                                @endif
-                                                <button type="submit" class="btn-pesan py-1">Antar Pesanan</button>
+                                            <div>
+                                                <button type="submit" class="btn-pesan ml-2">Antar Pesanan</button>
+                                                <br>
                                             </div>
                                             <div class="">
+                                                @if ($item->jenispembayaran === 'bank')
+                                                    <a href="" class="btn-pesan py-1"
+                                                        data-toggle="modal"data-target="#imageModal{{ $item->id }}">Bukti
+                                                        Pembayaran</a>
+                                                @endif
                                                 <a href="{{ route('cetak.pesanan', $item->id) }}" target="_blank"
-                                                    class="btn-pesan float-right mr-1">Download Invoice</a>
+                                                    class="btn-pesan py-1">Download Invoice</a>
                                             </div>
                                         </div>
                                     </div>
@@ -369,9 +374,9 @@
                                             </div>
                                             <div class="">
                                                 <a href="{{ route('cetak.pesanan', $item1->id) }}" target="_blank"
-                                                    class="btn-pesan py-1">Resi Pengiriman</a>
-                                                <a href="{{ route('cetak.resipengiriman', $item1->id) }}" target="_blank"
                                                     class="btn-pesan py-1">Download Invoice</a>
+                                                <a href="{{ route('cetak.resipengiriman', $item1->id) }}" target="_blank"
+                                                    class="btn-pesan py-1">Resi Pengiriman</a>
                                             </div>
                                         </div>
                                     </div>
@@ -549,6 +554,21 @@
     </div>
     </div>
     <script>
+        // Referensi ke elemen input file dan elemen h6
+        // const fileInput = document.getElementById('fileInput');
+        // const fileUploadedMessage = document.getElementById('fileUploadedMessage');
+
+        // // Event listener untuk perubahan pada input file
+        // fileInput.addEventListener('change', function() {
+        //     if (fileInput.files.length > 0) {
+        //         // Ambil nama file yang diunggah
+        //         const fileName = fileInput.files[0].name;
+
+        //         // Tampilkan nama file di elemen h6
+        //         fileUploadedMessage.textContent = `${fileName}`;
+        //     }
+        // });
+
         $(document).ready(function() {
             // Simpan padding-right awal body
             const originalPaddingRight = $('body').css('padding-right');
