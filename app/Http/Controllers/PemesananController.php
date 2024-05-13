@@ -19,7 +19,7 @@ class PemesananController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $pesanan = Pemesanan::with('toko')->where("user_id", $user->id)->where("status", '1')->get();
+        $pesanan = Pemesanan::with('toko')->where("user_id", $user->id)->whereIn("status", [1,3])->orderBy('status', 'asc')->get();
         $riwayat = Pemesanan::with('toko')->where("user_id", $user->id)->where("status", '0')->get();
         $sedangdiantar = Pemesanan::with('toko')->where("user_id", $user->id)->where("status", '2')->get();
         $detailpemesanan = [];
@@ -97,6 +97,19 @@ class PemesananController extends Controller
         return redirect()->route('penjualan.show');
     }
 
+    public function tolak(Request $request)
+    {
+        if ($request->hasFile('buktipenolakan')) {
+            $gambar = $request->file('buktipenolakan');
+            $fileName = uniqid() . '.' . $gambar->getClientOriginalExtension();
+            $gambar->storeAs('public/photo/', $fileName);
+        }else{
+            $fileName = '';
+        }
+        Pemesanan::where('id', $request->id)->update(['status' => '3', 'pesan' => $request->pesan, 'buktipenolakan' => $fileName]);
+        return redirect()->route('penjualan.show');
+    }
+
     public function selesai(Request $request, $id)
     {
         Pemesanan::where('id', $id)->update(['status' => '0']);
@@ -152,5 +165,20 @@ class PemesananController extends Controller
 
         // Mengembalikan PDF untuk streaming atau unduhan
         return $pdf->stream("ResiPengiriman{$nomorinvoice}.pdf"); // Gunakan ID pesanan untuk nama file
+    }
+
+    public function hapuspesanan($id){
+        try {
+            // Temukan data berdasarkan ID
+            $item = Pemesanan::findOrFail($id);
+            // Hapus data
+            $item->delete();
+
+            // Jika berhasil dihapus, kembalikan respons
+            return redirect()->back();
+        } catch (\Exception $e) {
+            // Jika terjadi kesalahan, kembalikan respons dengan pesan kesalahan
+            return redirect()->back()->with('error', 'Gagal menghapus data. Silakan coba lagi.');
+        }
     }
 }

@@ -75,7 +75,6 @@
                     <a class="nav-link button-style text-white" id="help-tab" data-toggle="tab" href="#dikirim"
                         role="tab" aria-controls="help" aria-selected="false">Sedang Dikirim</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link button-style text-white" id="about-tab" data-toggle="tab" href="#riwayat"
                         role="tab" aria-controls="about" aria-selected="false">Riwayat Penjualan</a>
@@ -172,9 +171,6 @@
                                                         <div class="col-md-3">Subtotal :
                                                             {{ 'Rp.' . number_format($itemdetail->subtotal, 0, ',', '.') }}
                                                         </div>
-                                                        <div class="col-md-3">
-                                                            Total {{ 'Rp.' . number_format($item->total, 0, ',', '.') }}
-                                                        </div>
                                                         <hr>
                                                     @endforeach
                                                     <div class="col-md-9">
@@ -190,7 +186,7 @@
                                                 <label for="resipengiriman">No. Resi</label>
                                                 <input type="text" name="resipengiriman" id="resipengiriman"
                                                     class="form-control w-25" maxlength="16">
-                                                    @error('resipengiriman')
+                                                @error('resipengiriman')
                                                     <small class="form-text text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
@@ -214,49 +210,58 @@
                                     </div>
                                 </div>
                             </div>
-
-                            {{-- HANYA MODAL UNTUK MENAMPILKAN BUKTI PEMESANAN --}}
-                            <!-- Modal Baru -->
-                            <div class="modal fade" id="imageModal{{ $item->id }}" tabindex="-1"
-                                aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Bukti Pembayaran</h5>
-                                        </div>
-                                        <div class="modal-body">
-                                            <img src="{{ asset('/storage/photo/' . $item->buktipembayaran) }}"
-                                                alt="Bukti Pembayaran" class="img-fluid"
-                                                style="max-width: 100%; cursor: pointer;" data-toggle="modal"
-                                                data-target="#fullScreenImageModal">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button class="btn-pesan py-1 px-2" type="button" data-toggle="modal"
-                                                data-target="#imageModal{{ $item->id }}">Tutup</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="modal fade" id="fullScreenImageModal" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered modal-fullscreen">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body text-center">
-                                            <img id="fullScreenImage" src="" alt="Layar penuh"
-                                                class="img-fluid" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {{-- END HANYA MODAL UNTUK MENAMPILKAN BUKTI PEMESANAN --}}
-
                         </form>
+                        {{-- HANYA MODAL UNTUK MENAMPILKAN BUKTI PEMESANAN --}}
+                        <!-- Modal Baru -->
+                        <div class="modal fade" id="imageModal{{ $item->id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Bukti Pembayaran</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="{{ asset('/storage/photo/' . $item->buktipembayaran) }}"
+                                            alt="Bukti Pembayaran" class="img-fluid"
+                                            style="max-width: 100%; cursor: pointer;" data-toggle="modal"
+                                            data-target="#fullScreenImageModal">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="{{ route('pesanan.tolak') }}" method="POST"
+                                            enctype="multipart/form-data"
+                                            class="d-flex flex-wrap align-items-center w-100">
+                                            @csrf
+                                            <input type="hidden" value="{{ $item->id }}" name="id">
+                                            <label for="pesan" class="mr-2">Pesan<br>Penolakan</label>
+                                            <input type="text" name="pesan" class="form-control py-1 w-50"
+                                                style="margin-right: 15rem" id="pesan">
+                                            <label for="buktipenolakan" class="mr-2">Bukti<br>Penolakan</label>
+                                            <input type="file" class="form-control w-50" id="buktipenolakan"
+                                                name="buktipenolakan">
+                                            <button class="btn-pesan py-1 px-2 ml-2 mr-2 my-0" type="submit">Kirim
+                                                Penolakan</button>
+                                            <button class="btn-pesan py-1 px-2 my-0" type="button" data-toggle="modal"
+                                                data-target="#imageModal{{ $item->id }}">Tutup</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="fullScreenImageModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img id="fullScreenImage" src="" alt="Layar penuh" class="img-fluid" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- END HANYA MODAL UNTUK MENAMPILKAN BUKTI PEMESANAN --}}
                     @endforeach
                 </div>
 
@@ -568,6 +573,9 @@
         //         fileUploadedMessage.textContent = `${fileName}`;
         //     }
         // });
+        function submitForm(itemId) {
+            document.getElementById('tolakForm' + itemId).submit();
+        }
 
         $(document).ready(function() {
             // Simpan padding-right awal body

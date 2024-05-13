@@ -110,7 +110,10 @@
 
                                     <tr id="bukti-pembayaran-row" style="display: none;"> <!-- Sembunyikan awal -->
                                         <td>Bukti Pembayaran</td>
-                                        <td><input type="file" class="form-control" id="buktipembayaran" name="buktipembayaran"></td>
+                                        <td>
+                                            <input type="file" class="form-control" id="buktipembayaran" name="buktipembayaran">
+                                            <small class="text-danger">Pastikan uang yang anda transfer sesuai dengan nominal yang telah ditetapkan</small>
+                                        </td>
                                     </tr>
                                 </table>
                                 <button type="submit" class="btn-pesan p-1">Pesan</button>

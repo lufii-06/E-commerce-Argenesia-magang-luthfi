@@ -11,7 +11,6 @@
     <style>
         .hr-thick {
             border-top: 4px solid #000;
-            /* Atur ketebalan dan warna garis */
         }
     </style>
 </head>

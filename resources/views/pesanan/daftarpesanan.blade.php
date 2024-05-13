@@ -26,7 +26,8 @@
                 background-color: white;
                 color: orangered;
                 padding: 0.15rem;
-                margin-top: -5px
+                margin-top: -5px;
+                opacity: 1;
             }
 
             .btn-pesan:hover {
@@ -60,6 +61,16 @@
             body.modal-open {
                 padding-right: 0 !important;
             }
+
+            .pudar {
+                opacity: 0.6;
+                /* Atur nilai opasitas sesuai keinginan Anda */
+            }
+
+            .normal {
+                opacity: 1;
+                /* Atur opacity menjadi 1 agar tombol tidak menjadi pudar */
+            }
         </style>
     </head>
     <div class="fashion_section" id="fashion_section">
@@ -89,14 +100,26 @@
                     <div class="card-body ">
                         <h2>Pesanan Saya</h2>
                         @foreach ($pesanan as $item)
-                            <details open>
-                                <summary>Tanggal: {{ $item->tanggal }} &nbsp; | &nbsp; Total
-                                    Belanja:&nbsp;&nbsp;{{ 'Rp.' . number_format($item->total, 0, ',', '.') }}
-                                    &nbsp; | &nbsp; {{ $item->toko->name }}
-                                    <a href="#" class="btn-pesan float-right" data-toggle="modal"
-                                        data-target="#exampleModal{{ $item->id }}">Lihat Invoice</a>
+                            <details open class="{{ $item->status === 3 ? 'pudar' : '' }}">
+                                <summary>
+                                    Tanggal: {{ $item->tanggal }} &nbsp; | &nbsp; Total
+                                    Belanja:&nbsp;&nbsp;{{ 'Rp.' . number_format($item->total, 0, ',', '.') }} &nbsp; |
+                                    &nbsp; {{ $item->toko->name }}
+                                    {{ $item->status === 3 ? '| Pesanan Ditolak |' : '' }}
+                                    {{ $item->status === 3 ? $item->pesan : '' }}
+                                    @if ($item->status === 1)
+                                        <a href="#" class="btn-pesan float-right" data-toggle="modal"
+                                            data-target="#exampleModal{{ $item->id }}">Lihat Invoice</a>
+                                    @else
+                                        <a href="#" class="btn-pesan float-right ml-2" data-toggle="modal"
+                                            data-target="#modalgambar{{ $item->id }}">Pengembalian</a>
 
+
+                                        <a href="{{ route('pesanan.hapus', $item->id) }}"
+                                            class="btn-pesan float-right">Hapus Pesanan</a>
+                                    @endif
                                 </summary>
+
                                 <ul>
                                     @foreach ($detailpemesanan[$item->id] as $itemdetail)
                                         <li class="d-flex align-items-center">
@@ -118,6 +141,31 @@
                                     @endforeach
                                 </ul>
                             </details>
+                            <div class="modal fade" id="modalgambar{{ $item->id }}" tabindex="-1" role="dialog"
+                                aria-labelledby="imageModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="imageModalLabel">Bukti Penolakan</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @if (!empty($item->buktipenolakan))
+                                            <img src="{{ asset('/storage/photo/' . $item->buktipenolakan) }}"
+                                            class="img-fluid" id="modalImage" alt="Gambar">
+                                            @else
+                                                Tidak Ada Transfer Pengembalian Uang
+                                            @endif
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Tutup</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
                     </div>
 
@@ -212,8 +260,8 @@
                                     <div class="modal-body">
                                         <img src="{{ asset('/storage/photo/' . $item->buktipembayaran) }}"
                                             alt="Bukti Pembayaran" class="img-fluid"
-                                            style="max-width: 100%; cursor: pointer;" data-toggle="modal"
-                                            data-target="#fullScreenImageModal">
+                                            style="max-width: 100%; cursor: pointer; max-width: 100%; max-height: 400px;"
+                                            data-toggle="modal" data-target="#fullScreenImageModal">
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn-pesan py-1 px-2" type="button" data-toggle="modal"
@@ -222,7 +270,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="modal fade" id="fullScreenImageModal" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-fullscreen">
                                 <div class="modal-content">
@@ -242,7 +289,6 @@
                         {{-- END HANYA MODAL UNTUK MENAMPILKAN BUKTI PEMESANAN --}}
                     @endforeach
                 </div>
-
                 {{-- SEDANG DIANTAR --}}
                 <div class="tab-pane fade" id="diantar" role="tabpanel" aria-labelledby="help-tab">
                     <div class="card-header">

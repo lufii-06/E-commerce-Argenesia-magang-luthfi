@@ -435,7 +435,7 @@ class ProdukController extends Controller
             $fileName = uniqid() . '.' . $gambar->getClientOriginalExtension();
             $gambar->storeAs('public/photo/', $fileName);
         } else {
-
+            $fileName = '';
         }
         $data = [
             "user_id" => $user->id,

@@ -20,7 +20,9 @@ class Pemesanan extends Model
         'status',
         'jenispembayaran',
         'buktipembayaran',
-        'resipengiriman'
+        'resipengiriman',
+        'pesan',
+        'buktipenolakan'
     ];
 
     public function user(){

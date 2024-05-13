@@ -26,6 +26,8 @@ return new class extends Migration
             $table->text('jenispembayaran');
             $table->text('buktipembayaran')->nullable();
             $table->text('resipengiriman')->nullable();
+            $table->text('pesan')->nullable();
+            $table->text('buktipenolakan')->nullable();
             $table->timestamps();
         });
     }

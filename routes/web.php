@@ -115,10 +115,11 @@ Route::group(['middleware' => ['auth']], function () {
     });
     Route::get('/pesanansaya', [PemesananController::class, 'index'])->name('daftar.pesanan');
     Route::get('/riwayatbelanja', [PemesananController::class, 'riwayatbelanja'])->name('daftar.riwayatbelanja');
-    // Route::get('/pesanan/show', [PemesananController::class, 'show'])->name('pesanan.show');
     Route::get('/penjualan/show', [PemesananController::class, 'show'])->name('penjualan.show');
+    Route::post('/pesanan/tolak', [PemesananController::class, 'tolak'])->name('pesanan.tolak');
     Route::put('/pesanan/antar/{id}', [PemesananController::class, 'antar'])->name('pesanan.antar');
     Route::put('/pesanan/selesai/{id}', [PemesananController::class, 'selesai'])->name('pesanan.selesai');
+    Route::get('pemesanan/hapus/{id}', [PemesananController::class, 'hapuspesanan'])->name('pesanan.hapus');
     Route::get('pesanan/cetak/{id}', [PemesananController::class, 'cetakpesanan'])->name('cetak.pesanan');
     Route::get('resipengiriman/cetak/{id}', [PemesananController::class, 'cetakresipengiriman'])->name('cetak.resipengiriman');
 });
